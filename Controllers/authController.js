@@ -377,3 +377,23 @@ export const googleAuth = async (req, res) => {
     res.status(500).json({ message: "Google authentication failed", error: err.message });
   }
 };
+
+// ------------ GET LOGGED IN USER ------------
+export const getProfile = async (req, res) => {
+  try {
+    // req.user is already set by verifyToken middleware
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { password, otp, otpExpires, ...safeUser } = req.user.toObject();
+
+    return res.status(200).json({
+      success: true,
+      user: safeUser,
+    });
+  } catch (err) {
+    console.error("Get Me Error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
